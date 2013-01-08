@@ -1,0 +1,9 @@
+<%= semantic_form_for @number, :url => numbers_path, :as => :number do |form| %>
+  <%= form.inputs do %>
+    <%= form.input :prefix, :placeholder => '604', :label => "Area Code" %>
+    <%= form.input :forward_to, :placeholder => '6041234567' %>
+  <%end%>
+  <%= form.actions do %>
+    <%= form.action :submit, :label => "Create Number" %>
+  <%end%>
+<% end %>

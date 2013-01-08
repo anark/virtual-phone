@@ -1,0 +1,9 @@
+log/*.log
+tmp/**/*
+tmp/*
+config/database.yml
+.DS_Store
+db/schema.rb
+capybara-*
+.bundle
+.sass-cache

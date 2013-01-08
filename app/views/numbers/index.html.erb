@@ -1,0 +1,17 @@
+<table class="table table-striped table-hover">
+  <%= link_to "Add New Number", new_number_path, :class => "btn" %>
+  <thead>
+    <tr>
+      <th>Number</th>
+      <th>To</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @numbers.each do |number| %>
+      <tr>
+        <td><%= number.number %></td>
+        <td><%= number.forward_to %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
