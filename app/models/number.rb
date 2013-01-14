@@ -1,8 +1,7 @@
 class Number < ActiveRecord::Base
-  validates_format_of :number, :with => /\A\d{10}\z/
-  validates_uniqueness_of :number
-  validates_presence_of :number, :phone
-
+  validates :number, :presence => true, :uniqueness => true, :format => { :with => /\A\d{10}\z/ }
+  validates :prefix, :presence => true, :format => { :with => /\A\d{3}\z/ }
+  validates :phone_id, :presence => true
   belongs_to :phone
 
   before_validation :provision_number, :on => :create, :unless => :number?

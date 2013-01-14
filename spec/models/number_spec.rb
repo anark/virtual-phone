@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Number do
   describe "validations" do
-    subject { Factory(:number) }
+    subject { FactoryGirl.create(:number) }
     it { should validate_presence_of :number }
     it { should validate_uniqueness_of(:number) }
     it { should allow_value("6049999999").for(:number) }
@@ -15,7 +15,7 @@ describe Number do
   end
 
   describe '#find_by_number' do
-    let!(:number) { Factory(:number, :number => "6049999999") }
+    let!(:number) { FactoryGirl.create(:number, :number => "6049999999") }
 
     it 'should find number without country code' do
       Number.find_by_number('6049999999').should == number
@@ -27,14 +27,14 @@ describe Number do
   end
 
   describe "forward_to" do
-    let(:number) { Factory(:number) }
+    let(:number) { FactoryGirl.create(:number) }
     subject {number}
 
     its(:forward_to) { should == number.phone.number }
   end
 
   describe "provision_number callback" do
-    let(:number) { Factory.build(:number, :number => nil, :prefix => '604') }
+    let(:number) { FactoryGirl.build(:number, :number => nil, :prefix => '604') }
 
     it "should call provision number on create if number has a prefix and no number" do
       number.should_receive(:provision_number)
@@ -49,7 +49,7 @@ describe Number do
   end
 
   describe "provision number" do
-    let(:number) { Factory.build(:number, :number => nil, :prefix => '604') }
+    let(:number) { FactoryGirl.build(:number, :number => nil, :prefix => '604') }
 
     it "should set the number to the provisioned number on create" do
       adapter = Adapter.new

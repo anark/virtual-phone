@@ -4,7 +4,7 @@ describe TropoAdapter do
   let(:adapter) { TropoAdapter.new }
 
   describe "#forward_call" do
-    let(:number) { Factory(:number) }
+    let(:number) { FactoryGirl.create(:number) }
     let(:from_number) { "6049999999" }
     let(:json_response) { JSON.parse adapter.forward_call(number, from_number).to_json }
     subject { json_response }

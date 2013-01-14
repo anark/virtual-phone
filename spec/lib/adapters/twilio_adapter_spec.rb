@@ -4,7 +4,7 @@ describe TwilioAdapter do
   let(:adapter) { TwilioAdapter.new }
 
   describe "#forward_call" do
-    let(:number) { Factory(:number) }
+    let(:number) { FactoryGirl.create(:number) }
     let(:from_number) { "6049999999" }
     let(:xml_response) { Nokogiri::XML adapter.forward_call(number, from_number) }
     subject { xml_response }
@@ -30,7 +30,7 @@ describe TwilioAdapter do
   end
 
   describe "#forward_sms" do
-    let(:number) { Factory(:number) }
+    let(:number) { FactoryGirl.create(:number) }
     let(:from_number) { "6049999999" }
     let(:message_content) { "hello" }
     let(:xml_response) { Nokogiri::XML adapter.forward_sms(number, from_number, message_content) }

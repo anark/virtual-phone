@@ -2,7 +2,7 @@ require "spec_helper"
 
 feature "View existing numbers" do
   scenario "display a number" do
-    Factory(:number, :number => "6041111111")
+    FactoryGirl.create(:number, :number => "6041111111")
     visit numbers_path
     page.should have_content("6041111111")
   end

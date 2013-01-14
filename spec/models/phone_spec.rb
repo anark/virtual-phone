@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Phone do
   describe "validations" do
-    subject { Factory(:phone) }
+    subject { FactoryGirl.create(:phone) }
     it { should validate_presence_of :number }
     it { should validate_uniqueness_of(:number) }
     it { should allow_value("6049999999").for(:number) }
