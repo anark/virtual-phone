@@ -35,7 +35,7 @@ To use twilio set the following environment variables
     URL
     TWILIO_ACCOUNT_SID
     TWILIO_AUTH_TOKEN
-
+    ADAPTER to twilio
 
 TROPO
 -----
