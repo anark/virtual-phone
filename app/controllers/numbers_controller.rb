@@ -6,6 +6,7 @@ class NumbersController < ApplicationController
   end
 
   def new
+    @number.phone = Phone.new
   end
 
   def create

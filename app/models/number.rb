@@ -1,27 +1,27 @@
 class Number < ActiveRecord::Base
-  validates :number, :presence => true, :uniqueness => true, :format => { :with => /\A\d{10}\z/ }
+  validates :number, :presence => true, :uniqueness => true, :phony_plausible => true
   validates :prefix, :presence => true, :format => { :with => /\A\d{3}\z/ }
-  validates :phone_id, :presence => true
+  validates :phone, :presence => true
   belongs_to :phone
 
   before_validation :provision_number, :on => :create, :unless => :number?
 
+  phony_normalize :number, :default_country_code => "CA"
+
+  accepts_nested_attributes_for :phone
+
   attr_accessor :adapter
 
   def self.find_by_number(number)
-    super(number) || super(number[1..-1])
+    super(number) || super("1#{number}")
   end
 
   def provision_number
     self.number = adapter.provision_number(prefix) if prefix
   end
 
-  def forward_to=(forward_to)
-    self.phone = Phone.find_or_create_by_number(forward_to)
-  end
-
   def forward_to
-    phone.number if phone
+    Phony.formatted(phone.number, :format => :international, :spaces => "") if phone
   end
 
   def incoming_call(from)

@@ -7,13 +7,16 @@ gem "json"
 gem "tropo-webapi-ruby"
 gem "twilio-ruby"
 gem "httparty"
+gem 'phony_rails'
+gem 'phony'
+gem 'countries'
+gem "faker"
 
 group :test do
   gem "rspec"
   gem "rspec-rails"
   gem "shoulda-matchers"
   gem "factory_girl_rails", "~> 4.0"
-  gem "faker"
   gem "ruby-debug19"
   gem "nokogiri"
   gem 'capybara'
