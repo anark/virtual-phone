@@ -1,0 +1,6 @@
+<%= semantic_form_for @number, :url => number_path, :as => :number do |form| %>
+  <%= render :partial => "phone_fields", :locals => {:form => form} %>
+  <%= form.actions do %>
+    <%= form.action :submit, :label => "Update Number" %>
+  <%end%>
+<% end %>

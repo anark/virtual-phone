@@ -46,6 +46,13 @@ class TropoAdapter < Adapter
     end
   end
 
+  def release_number(number)
+    response = Http.delete("/addresses/number/#{number}")
+    unless response.code == 204
+      raise NumberNotReleased
+    end
+  end
+
   def forward_sms(number, from_number, message)
     tropo = Tropo::Generator.new
     tropo.message({

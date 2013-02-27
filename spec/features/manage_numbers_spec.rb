@@ -14,8 +14,18 @@ feature "Adding a number" do
     click_link "Add New Number"
     fill_in "Area Code", :with => "604"
     find(:select, 'number_phone_attributes_country_code').first(:option, 'Canada').select_option
-    fill_in "Number", :with => "11234567890"
+    fill_in "Number", :with => "1234567890"
     click_button "Create Number"
     page.should have_content("123 456 7890")
+  end
+end
+
+feature "Edit a number" do
+  scenario "change forwarded to number" do
+    number = FactoryGirl.create(:number, :number => "6041111111")
+    visit edit_number_path(number)
+    find(:select, 'number_phone_attributes_country_code').first(:option, 'Canada').select_option
+    fill_in "Number", :with => "3333333333"
+    click_button "Update Number"
   end
 end

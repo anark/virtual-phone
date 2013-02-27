@@ -88,4 +88,14 @@ describe Number do
       number.number.should == "16048001234"
     end
   end
+
+  describe "phone_attributes" do
+    it "should create a new phone with number" do
+      pending
+    end
+
+    it "should find an existing phone by number" do
+      fail
+    end
+  end
 end

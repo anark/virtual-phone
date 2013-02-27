@@ -4,6 +4,7 @@
     <tr>
       <th>Number</th>
       <th>To</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -11,6 +12,7 @@
       <tr>
         <td><%= number.number.phony_formatted %></td>
         <td><%= number.phone.number.phony_formatted %></td>
+        <td><%= link_to 'edit', edit_number_path(number) %></td>
       </tr>
     <% end %>
   </tbody>

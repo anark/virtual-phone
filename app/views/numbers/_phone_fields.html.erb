@@ -1,0 +1,6 @@
+<%= form.semantic_fields_for :phone do |phone| %>
+  <%= form.inputs "Forward To Phone" do%>
+    <%= phone.input :country_code, :label => "Country", :as => :country %>
+    <%= phone.input :number %>
+  <%end%>
+<% end %>

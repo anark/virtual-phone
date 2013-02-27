@@ -6,6 +6,8 @@ class Number < ActiveRecord::Base
 
   before_validation :provision_number, :on => :create, :unless => :number?
 
+  after_destroy :release_number
+
   phony_normalize :number, :default_country_code => "CA"
 
   accepts_nested_attributes_for :phone
@@ -18,6 +20,10 @@ class Number < ActiveRecord::Base
 
   def provision_number
     self.number = adapter.provision_number(prefix) if prefix
+  end
+
+  def release_number
+    adapter.release_number(number)
   end
 
   def forward_to

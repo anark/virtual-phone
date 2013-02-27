@@ -42,6 +42,12 @@ class TwilioAdapter < Adapter
     end
   end
 
+  def release_number(number)
+    numbers = Http.get("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers?PhoneNumber=#{number}")
+    number_sid = 
+    response = Http.delete("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number_sid}")
+  end
+
   def forward_sms(number, from_number, message)
     response = Twilio::TwiML::Response.new do |r|
       r.Sms message, :to => number.forward_to, :from => from_number
