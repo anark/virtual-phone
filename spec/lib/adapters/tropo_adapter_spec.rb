@@ -32,17 +32,75 @@ describe TropoAdapter do
     end
   end
 
+  describe "release_number" do
+    let(:number) { FactoryGirl.create(:number, :number => "16043333333") }
+
+    it "should make a delete request to /addresses/number/16043333333" do
+      TropoAdapter::Http.should_receive(:delete).
+        with("/addresses/number/16043333333").
+        and_return(stub(:code => 200))
+      adapter.release_number(number)
+    end
+
+    it "should raise a NumberNotReleased error if number fails to release" do
+      TropoAdapter::Http.should_receive(:delete).
+        and_return(stub(:code => 400))
+      lambda { adapter.release_number(number) }.should raise_error(Adapter::NumberNotReleased)
+    end
+  end
+
   describe "provision_number" do
-    it "should provision a new number with the prefix and return the number" do
-      pending
+    let(:response_data) { stub(:code => 200, :body => {"href" => "+16041111111"}.to_json) }
+
+    it "should post to /addresses" do
+      TropoAdapter::Http.should_receive(:post).
+        with("/addresses", anything()).
+        and_return(response_data)
+      adapter.provision_number("604")
     end
 
-    it "should raise an error if the prefix is not available" do
-      pending
+    it "should request type number" do
+      TropoAdapter::Http.should_receive(:post).
+        with(anything(), hash_including(:body => hash_including(:type => "number"))).
+        and_return(response_data)
+      adapter.provision_number("604")
     end
 
-    it "should raise an error when the number fails to provision" do
-      pending
+    it "should request the supplied prefix with country code" do
+      TropoAdapter::Http.should_receive(:post).
+        with(anything(), hash_including(:body => hash_including(:prefix => "1604"))).
+        and_return(response_data)
+      adapter.provision_number("604")
+    end
+
+    describe "possible outcomes" do
+      let(:response_body) { nil }
+      before do
+        TropoAdapter::Http.should_receive(:post).
+          and_return(stub(:code => response_code, :body => response_body.to_json))
+      end
+
+      context "when provisioning is successful" do
+        let(:response_code) { 200 }
+        let(:response_body) { {"href" => "+16049999999"} }
+        it "should return the number" do
+          adapter.provision_number("604").should == "6049999999"
+        end
+      end
+
+      context "when no number is available" do
+        let(:response_code) { 503 }
+        it "should raise an error if the prefix is not available" do
+          lambda { adapter.provision_number("604") }.should raise_error(Adapter::NumberNotAvailableError)
+        end
+      end
+
+      context "when number fails to provision" do
+        let(:response_code) { 500 }
+        it "should raise an error if provisioning fails" do
+          lambda { adapter.provision_number("604") }.should raise_error(Adapter::NumberProvisioningError)
+        end
+      end
     end
   end
 end

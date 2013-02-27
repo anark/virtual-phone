@@ -13,6 +13,7 @@
         <td><%= number.number.phony_formatted %></td>
         <td><%= number.phone.number.phony_formatted %></td>
         <td><%= link_to 'edit', edit_number_path(number) %></td>
+        <td><%= link_to 'delete', number_path(number), :method => :delete %></td>
       </tr>
     <% end %>
   </tbody>

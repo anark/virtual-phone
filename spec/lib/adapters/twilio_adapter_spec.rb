@@ -59,17 +59,44 @@ describe TwilioAdapter do
     end
   end
 
+  describe "release_number" do
+    let(:number) { FactoryGirl.create(:number, :number => "16043333333") }
+
+    it "should make a delete request to /Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/<number_sid>" do
+      TwilioAdapter::Http.should_receive(:delete).
+        with("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number.sid}").
+        and_return(stub(:code => 204))
+      adapter.release_number(number)
+    end
+
+    it "should raise a NumberNotReleased error if number fails to release" do
+      TwilioAdapter::Http.should_receive(:delete).
+        and_return(stub(:code => 400))
+      lambda { adapter.release_number(number) }.should raise_error(Adapter::NumberNotReleased)
+    end
+  end
+
   describe "#provision_number" do
-    it "should provision a new number with the prefix and return the number" do
-      pending
-    end
+    describe "possible outcomes" do
+      let(:response_body) { nil }
+      before do
+        TwilioAdapter::Http.should_receive(:post).
+          and_return(stub(:code => response_code, :parsed_response => {"TwilioResponse" => {"IncomingPhoneNumber" => {"PhoneNumber" => "+16049999999"}}}))
+      end
 
-    it "should raise an error if the prefix is not available" do
-      pending
-    end
+      context "when provisioning is successful" do
+        let(:response_code) { 200 }
+        it "should return the number" do
+          adapter.provision_number("604").should == "6049999999"
+        end
+      end
 
-    it "should raise an error when the number fails to provision" do
-      pending
+      context "when number fails to provision" do
+        let(:response_code) { 500 }
+        it "should raise an error if provisioning fails" do
+          lambda { adapter.provision_number("604") }.should raise_error(Adapter::NumberProvisioningError)
+        end
+      end
     end
   end
 end

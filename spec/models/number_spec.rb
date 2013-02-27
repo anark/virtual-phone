@@ -77,7 +77,7 @@ describe Number do
     end
   end
 
-  describe "provision number" do
+  describe "provision_number" do
     let(:number) { FactoryGirl.build(:number, :number => nil, :prefix => '604') }
 
     it "should set the number to the provisioned number on create" do
@@ -89,13 +89,36 @@ describe Number do
     end
   end
 
+  describe "release_number" do
+    let(:number) { FactoryGirl.create(:number) }
+    it "should call release number on the adapter" do
+      number.adapter.should_receive(:release_number).with(number)
+      number.release_number
+    end
+  end
+
+  describe "after_destory" do
+    let(:number) { FactoryGirl.create(:number) }
+    it "should call release_number after destroy" do
+      number.should_receive(:release_number)
+      number.destroy
+    end
+  end
+
   describe "phone_attributes" do
+    let(:number) { FactoryGirl.build(:number, :phone => nil) }
     it "should create a new phone with number" do
-      pending
+      number.phone_attributes = FactoryGirl.attributes_for(:phone)
+      number.save!
+      number.phone.should_not be_nil
     end
 
     it "should find an existing phone by number" do
-      fail
+      phone_attributes = FactoryGirl.attributes_for(:phone)
+      phone = Phone.create!(phone_attributes)
+      number.phone_attributes = phone_attributes
+      number.save!
+      number.phone.should == phone
     end
   end
 end

@@ -43,9 +43,10 @@ class TwilioAdapter < Adapter
   end
 
   def release_number(number)
-    numbers = Http.get("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers?PhoneNumber=#{number}")
-    number_sid = 
-    response = Http.delete("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number_sid}")
+    response = Http.delete("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number.sid}")
+    unless response.code == 204
+      raise NumberNotReleased
+    end
   end
 
   def forward_sms(number, from_number, message)

@@ -23,7 +23,7 @@ class Number < ActiveRecord::Base
   end
 
   def release_number
-    adapter.release_number(number)
+    adapter.release_number(self)
   end
 
   def forward_to
@@ -39,10 +39,8 @@ class Number < ActiveRecord::Base
   end
 
   def adapter_class
-    raise NotImplementedError
+    raise NotImplementedError, "adapter_class is not implemented for #{self.inspect}"
   end
-
-  protected
 
   def adapter
     @adapter ||= adapter_class.send(:new)

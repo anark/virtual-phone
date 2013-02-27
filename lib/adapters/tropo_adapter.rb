@@ -35,7 +35,7 @@ class TropoAdapter < Adapter
   def provision_number(prefix)
     prefix = "1#{prefix}"
     options = { :type => "number", :prefix => prefix }
-    response = Http.post("/addresses", :body => options.to_json)
+    response = Http.post("/addresses", :body => options)
     case response.code
     when 200
       return JSON.parse(response.body)["href"].split("+1").last
@@ -47,8 +47,8 @@ class TropoAdapter < Adapter
   end
 
   def release_number(number)
-    response = Http.delete("/addresses/number/#{number}")
-    unless response.code == 204
+    response = Http.delete("/addresses/number/#{number.number}")
+    unless response.code == 200
       raise NumberNotReleased
     end
   end
