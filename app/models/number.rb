@@ -48,4 +48,10 @@ class Number < ActiveRecord::Base
   def adapter
     @adapter ||= adapter_class.send(:new)
   end
+
+  def phone_attributes=(phone_attributes)
+    normalized_number = PhonyRails.normalize_number(phone_attributes[:number], :country_code => phone_attributes[:country_code])
+    self.phone = Phone.find_or_initialize_by_number(normalized_number)
+    self.phone.country_code ||= phone_attributes[:country_code]
+  end
 end
