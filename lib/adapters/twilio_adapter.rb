@@ -40,10 +40,8 @@ class TwilioAdapter < Adapter
       number = phone_number_attributes["PhoneNumber"].split("+1").last
       adapter_identifier = phone_number_attributes["Sid"]
       return [number, adapter_identifier]
-    when 400
-      raise NumberNotAvailableError, "#{response.code}: #{response.inspect}"
     else
-      raise NumberProvisioningError, "#{response.code}: #{response.inspect}"
+      raise NumberProvisioningError, response.inspect
     end
   end
 

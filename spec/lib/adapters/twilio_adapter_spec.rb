@@ -78,7 +78,6 @@ describe TwilioAdapter do
 
   describe "#provision_number" do
     describe "possible outcomes" do
-      let(:response_body) { nil }
       let(:twilio_response) { {"TwilioResponse" => {"IncomingPhoneNumber" => {"PhoneNumber" => "+16049999999", "Sid" => "1234"}}} }
       before do
         TwilioAdapter::Http.should_receive(:post).
@@ -93,7 +92,7 @@ describe TwilioAdapter do
       end
 
       context "when number fails to provision" do
-        let(:response_code) { 500 }
+        let(:response_code) { 400 }
         it "should raise an error if provisioning fails" do
           lambda { adapter.provision_number("604") }.should raise_error(Adapter::NumberProvisioningError)
         end
@@ -101,6 +100,7 @@ describe TwilioAdapter do
 
       context "when no number is available" do
         let(:response_code) { 400 }
+        let(:twilio_response) { {"TwilioResponse" => {"RestException" => {"Message" => "No phone numbers found", "Code"=>"21452"}}} }
         it "should raise an error if no number is available" do
           lambda { adapter.provision_number("604") }.should raise_error(Adapter::NumberNotAvailableError)
         end
