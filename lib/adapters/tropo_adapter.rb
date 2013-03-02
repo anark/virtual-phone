@@ -4,7 +4,7 @@ class TropoAdapter < Adapter
 
     base_uri "https://api.tropo.com/v1/applications/#{ENV['TROPO_APPLICATION_ID']}"
     basic_auth(ENV['TROPO_USERNAME'], ENV['TROPO_PASSWORD'])
-    headers 'Content-type' => 'application/json'
+    headers 'ContentType' => 'application/json'
   end
 
   def to
