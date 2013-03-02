@@ -7,6 +7,28 @@ class TropoAdapter < Adapter
     headers 'ContentType' => 'application/json'
   end
 
+  class ProvisioningResponse
+    def initialize(response)
+      @response = response
+    end
+
+    def success?
+      @response.code == 200
+    end
+
+    def adapter_identifier
+      JSON.parse(@response.body)["href"].split("/number/").last
+    end
+
+    def number
+      adapter_identifier.split("+1").last
+    end
+
+    def number_not_available?
+      @response.code == 503
+    end
+  end
+
   def to
     params[:to][:id]
   end
@@ -36,22 +58,22 @@ class TropoAdapter < Adapter
     prefix = "1#{prefix}"
     options = { :type => "number", :prefix => prefix }
     response = Http.post("/addresses", :body => options)
-    case response.code
-    when 200
-      adapter_identifier = JSON.parse(response.body)["href"].split("/number/").last
-      number = adapter_identifier.split("+1").last
+    provisioning_response = ProvisioningResponse.new(response)
+    if provisioning_response.success?
+      adapter_identifier = provisioning_response.adapter_identifier
+      number = provisioning_response.number
       return [number, adapter_identifier]
-    when 503
-      raise NumberNotAvailableError
+    elsif provisioning_response.number_not_available?
+      raise NumberNotAvailableError, response.inspect
     else
-      raise NumberProvisioningError
+      raise NumberProvisioningError, response.inspect
     end
   end
 
   def release_number(number)
     response = Http.delete("/addresses/number/#{number.adapter_identifier}")
     unless response.code == 200
-      raise NumberNotReleased
+      raise NumberNotReleased, response.inspect
     end
   end
 

@@ -6,6 +6,40 @@ class TwilioAdapter < Adapter
     basic_auth(ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN'])
   end
 
+  class ProvisioningResponse
+    def initialize(response)
+      @response = response
+    end
+
+    def success?
+      @response.code == 201
+    end
+
+    def parsed_response
+      @response.parsed_response
+    end
+
+    def phone_number_attributes
+      parsed_response["TwilioResponse"]["IncomingPhoneNumber"]
+    end
+
+    def number
+      phone_number_attributes["PhoneNumber"].split("+1").last
+    end
+
+    def sid
+      phone_number_attributes["Sid"]
+    end
+
+    def number_not_available?
+      begin
+        parsed_response["TwilioResponse"]["RestException"]["Code"] == "21452"
+      rescue NoMethodError
+        false
+      end
+    end
+  end
+
   def to
     params["To"].gsub(/[^0-9]/, "")# Remove +
   end
@@ -34,12 +68,13 @@ class TwilioAdapter < Adapter
   def provision_number(prefix)
     number_options = { "AreaCode" => prefix, "VoiceUrl" => "#{ENV['URL']}/phones/incoming_call", "SmsUrl" => "#{ENV['URL']}/phones/incoming_sms" }
     response = Http.post("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers", :body => number_options)
-    case response.code
-    when 201
-      phone_number_attributes = response.parsed_response["TwilioResponse"]["IncomingPhoneNumber"]
-      number = phone_number_attributes["PhoneNumber"].split("+1").last
-      adapter_identifier = phone_number_attributes["Sid"]
+    provisioning_response = ProvisioningResponse.new(response)
+    if provisioning_response.success?
+      number = provisioning_response.number
+      adapter_identifier = provisioning_response.sid
       return [number, adapter_identifier]
+    elsif provisioning_response.number_not_available?
+      raise NumberNotAvailableError, response.inspect
     else
       raise NumberProvisioningError, response.inspect
     end
@@ -48,7 +83,7 @@ class TwilioAdapter < Adapter
   def release_number(number)
     response = Http.delete("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number.adapter_identifier}")
     unless response.code == 204
-      raise NumberNotReleased
+      raise NumberNotReleased, response.inspect
     end
   end
 
