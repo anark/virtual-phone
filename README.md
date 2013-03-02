@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/anark/virtual-phone.png)](https://codeclimate.com/github/anark/virtual-phone)
+
 Virtual Phone
 =============
 Virtual Phone provides a simple way to provision numbers for different area codes and forward them to an existing phone.
