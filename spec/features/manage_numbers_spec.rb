@@ -37,6 +37,7 @@ feature "Delete a number" do
     visit numbers_path
     page.should have_content("604 111 1111")
     click_link "delete"
+    visit numbers_path
     page.should_not have_content("604 111 1111")
   end
 end
