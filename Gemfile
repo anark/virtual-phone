@@ -17,7 +17,7 @@ group :test do
   gem "rspec-rails"
   gem "shoulda-matchers"
   gem "factory_girl_rails", "~> 4.0"
-  gem "ruby-debug19"
+  gem "debugger"
   gem "nokogiri"
   gem 'capybara'
   gem 'launchy'
