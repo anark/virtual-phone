@@ -80,12 +80,20 @@ describe Number do
   describe "provision_number" do
     let(:number) { FactoryGirl.build(:number, :number => nil, :prefix => '604') }
 
-    it "should set the number to the provisioned number on create" do
+    before do
       adapter = Adapter.new
-      adapter.stub :provision_number => "16048001234"
+      adapter.stub :provision_number => ["16048001234", "1234"]
       number.should_receive(:adapter).any_number_of_times.and_return(adapter)
+    end
+
+    it "should set the number to the provisioned number on create" do
       number.save
       number.number.should == "16048001234"
+    end
+
+    it "should set the adapter_identifier to the returned identifier" do
+      number.save
+      number.adapter_identifier.should == "1234"
     end
   end
 

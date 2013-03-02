@@ -38,7 +38,9 @@ class TropoAdapter < Adapter
     response = Http.post("/addresses", :body => options)
     case response.code
     when 200
-      return JSON.parse(response.body)["href"].split("+1").last
+      number = JSON.parse(response.body)["href"].split("+1").last
+      adapter_identifier = JSON.parse(response.body)["href"]
+      return [number, adapter_identifier]
     when 503
       raise NumberNotAvailableError
     else
@@ -47,7 +49,7 @@ class TropoAdapter < Adapter
   end
 
   def release_number(number)
-    response = Http.delete("/addresses/number/#{number.number}")
+    response = Http.delete("/addresses/number/#{number.adapter_identifier}")
     unless response.code == 200
       raise NumberNotReleased
     end

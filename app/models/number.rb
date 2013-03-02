@@ -19,7 +19,10 @@ class Number < ActiveRecord::Base
   end
 
   def provision_number
-    self.number = adapter.provision_number(prefix) if prefix
+    return unless prefix
+    number, adapter_identifier = adapter.provision_number(prefix)
+    self.number = number
+    self.adapter_identifier = adapter_identifier
   end
 
   def release_number

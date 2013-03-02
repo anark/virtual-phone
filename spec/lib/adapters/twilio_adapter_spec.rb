@@ -60,11 +60,11 @@ describe TwilioAdapter do
   end
 
   describe "release_number" do
-    let(:number) { FactoryGirl.create(:number, :number => "16043333333") }
+    let(:number) { FactoryGirl.create(:number, :adapter_identifier => "123") }
 
-    it "should make a delete request to /Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/<number_sid>" do
+    it "should make a delete request to /Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/123" do
       TwilioAdapter::Http.should_receive(:delete).
-        with("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number.sid}").
+        with("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/123").
         and_return(stub(:code => 204))
       adapter.release_number(number)
     end
@@ -81,13 +81,13 @@ describe TwilioAdapter do
       let(:response_body) { nil }
       before do
         TwilioAdapter::Http.should_receive(:post).
-          and_return(stub(:code => response_code, :parsed_response => {"TwilioResponse" => {"IncomingPhoneNumber" => {"PhoneNumber" => "+16049999999"}}}))
+          and_return(stub(:code => response_code, :parsed_response => {"TwilioResponse" => {"IncomingPhoneNumber" => {"PhoneNumber" => "+16049999999", "Sid" => "1234"}}}))
       end
 
       context "when provisioning is successful" do
         let(:response_code) { 200 }
-        it "should return the number" do
-          adapter.provision_number("604").should == "6049999999"
+        it "should return the number and sid pair" do
+          adapter.provision_number("604").should == ["6049999999", "1234"]
         end
       end
 

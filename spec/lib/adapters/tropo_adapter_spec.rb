@@ -33,11 +33,11 @@ describe TropoAdapter do
   end
 
   describe "release_number" do
-    let(:number) { FactoryGirl.create(:number, :number => "16043333333") }
+    let(:number) { FactoryGirl.create(:number, :adapter_identifier => "+16043333333") }
 
-    it "should make a delete request to /addresses/number/16043333333" do
+    it "should make a delete request to /addresses/number/+16043333333" do
       TropoAdapter::Http.should_receive(:delete).
-        with("/addresses/number/16043333333").
+        with("/addresses/number/+16043333333").
         and_return(stub(:code => 200))
       adapter.release_number(number)
     end
@@ -83,8 +83,8 @@ describe TropoAdapter do
       context "when provisioning is successful" do
         let(:response_code) { 200 }
         let(:response_body) { {"href" => "+16049999999"} }
-        it "should return the number" do
-          adapter.provision_number("604").should == "6049999999"
+        it "should return the number and adapter_identifier pair" do
+          adapter.provision_number("604").should == ["6049999999", "+16049999999"]
         end
       end
 

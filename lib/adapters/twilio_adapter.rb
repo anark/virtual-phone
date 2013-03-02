@@ -36,14 +36,17 @@ class TwilioAdapter < Adapter
     response = Http.post("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers", :body => number_options)
     case response.code
     when 200
-      return response.parsed_response["TwilioResponse"]["IncomingPhoneNumber"]["PhoneNumber"].split("+1").last
+      phone_number_attributes = response.parsed_response["TwilioResponse"]["IncomingPhoneNumber"]
+      number = phone_number_attributes["PhoneNumber"].split("+1").last
+      adapter_identifier = phone_number_attributes["Sid"]
+      return [number, adapter_identifier]
     else
       raise NumberProvisioningError
     end
   end
 
   def release_number(number)
-    response = Http.delete("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number.sid}")
+    response = Http.delete("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers/#{number.adapter_identifier}")
     unless response.code == 204
       raise NumberNotReleased
     end
