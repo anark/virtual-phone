@@ -31,9 +31,7 @@ class NumbersController < ApplicationController
   end
 
   def destroy
-    @number = Number.find { params[:id] }
-    logger.info "Deleting #{@number.inspect}"
-    logger.info "Using Adapter #{@number.adapter.inspect}"
+    @number = Number.find(params[:id])
     if @number.destroy
       flash[:notice] = "Number deleted successfully"
       redirect_to numbers_path
