@@ -35,13 +35,15 @@ class TwilioAdapter < Adapter
     number_options = { "AreaCode" => prefix, "VoiceUrl" => "#{ENV['URL']}/phones/incoming_call", "SmsUrl" => "#{ENV['URL']}/phones/incoming_sms" }
     response = Http.post("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers", :body => number_options)
     case response.code
-    when 200
+    when 201
       phone_number_attributes = response.parsed_response["TwilioResponse"]["IncomingPhoneNumber"]
       number = phone_number_attributes["PhoneNumber"].split("+1").last
       adapter_identifier = phone_number_attributes["Sid"]
       return [number, adapter_identifier]
+    when 400
+      raise NumberNotAvailableError, "#{response.code}: #{response.inspect}"
     else
-      raise NumberProvisioningError, response.inspect
+      raise NumberProvisioningError, "#{response.code}: #{response.inspect}"
     end
   end
 

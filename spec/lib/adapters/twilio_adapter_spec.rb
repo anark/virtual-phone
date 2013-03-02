@@ -79,13 +79,14 @@ describe TwilioAdapter do
   describe "#provision_number" do
     describe "possible outcomes" do
       let(:response_body) { nil }
+      let(:twilio_response) { {"TwilioResponse" => {"IncomingPhoneNumber" => {"PhoneNumber" => "+16049999999", "Sid" => "1234"}}} }
       before do
         TwilioAdapter::Http.should_receive(:post).
-          and_return(stub(:code => response_code, :parsed_response => {"TwilioResponse" => {"IncomingPhoneNumber" => {"PhoneNumber" => "+16049999999", "Sid" => "1234"}}}))
+          and_return(stub(:code => response_code, :parsed_response => twilio_response))
       end
 
       context "when provisioning is successful" do
-        let(:response_code) { 200 }
+        let(:response_code) { 201 }
         it "should return the number and sid pair" do
           adapter.provision_number("604").should == ["6049999999", "1234"]
         end
@@ -95,6 +96,13 @@ describe TwilioAdapter do
         let(:response_code) { 500 }
         it "should raise an error if provisioning fails" do
           lambda { adapter.provision_number("604") }.should raise_error(Adapter::NumberProvisioningError)
+        end
+      end
+
+      context "when no number is available" do
+        let(:response_code) { 400 }
+        it "should raise an error if no number is available" do
+          lambda { adapter.provision_number("604") }.should raise_error(Adapter::NumberNotAvailableError)
         end
       end
     end
