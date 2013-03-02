@@ -82,7 +82,7 @@ describe TropoAdapter do
 
       context "when provisioning is successful" do
         let(:response_code) { 200 }
-        let(:response_body) { {"href" => "http://trop.com/addresses/+16049999999"} }
+        let(:response_body) { {"href" => "http://trop.com/addresses/number/+16049999999"} }
         it "should return the number and adapter_identifier pair" do
           adapter.provision_number("604").should == ["6049999999", "+16049999999"]
         end

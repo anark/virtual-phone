@@ -38,7 +38,7 @@ class TropoAdapter < Adapter
     response = Http.post("/addresses", :body => options)
     case response.code
     when 200
-      adapter_identifier = JSON.parse(response.body)["href"].split("/addresses/").last
+      adapter_identifier = JSON.parse(response.body)["href"].split("/number/").last
       number = adapter_identifier.split("+1").last
       return [number, adapter_identifier]
     when 503
