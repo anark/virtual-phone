@@ -7,6 +7,8 @@ class TwilioAdapter < Adapter
   end
 
   class ProvisioningResponse
+    attr_accessor :response
+
     def initialize(response)
       @response = response
     end
@@ -27,7 +29,7 @@ class TwilioAdapter < Adapter
       phone_number_attributes["PhoneNumber"].split("+1").last
     end
 
-    def sid
+    def adapter_identifier
       phone_number_attributes["Sid"]
     end
 
@@ -69,15 +71,7 @@ class TwilioAdapter < Adapter
     number_options = { "AreaCode" => prefix, "VoiceUrl" => "#{ENV['URL']}/phones/incoming_call", "SmsUrl" => "#{ENV['URL']}/phones/incoming_sms" }
     response = Http.post("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers", :body => number_options)
     provisioning_response = ProvisioningResponse.new(response)
-    if provisioning_response.success?
-      number = provisioning_response.number
-      adapter_identifier = provisioning_response.sid
-      return [number, adapter_identifier]
-    elsif provisioning_response.number_not_available?
-      raise NumberNotAvailableError, response.inspect
-    else
-      raise NumberProvisioningError, response.inspect
-    end
+    process_provisioning_response(provisioning_response)
   end
 
   def release_number(number)

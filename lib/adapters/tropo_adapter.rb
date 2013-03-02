@@ -8,6 +8,8 @@ class TropoAdapter < Adapter
   end
 
   class ProvisioningResponse
+    attr_accessor :response
+
     def initialize(response)
       @response = response
     end
@@ -59,15 +61,7 @@ class TropoAdapter < Adapter
     options = { :type => "number", :prefix => prefix }
     response = Http.post("/addresses", :body => options)
     provisioning_response = ProvisioningResponse.new(response)
-    if provisioning_response.success?
-      adapter_identifier = provisioning_response.adapter_identifier
-      number = provisioning_response.number
-      return [number, adapter_identifier]
-    elsif provisioning_response.number_not_available?
-      raise NumberNotAvailableError, response.inspect
-    else
-      raise NumberProvisioningError, response.inspect
-    end
+    process_provisioning_response(provisioning_response)
   end
 
   def release_number(number)
