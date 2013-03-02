@@ -41,7 +41,7 @@ class TwilioAdapter < Adapter
       adapter_identifier = phone_number_attributes["Sid"]
       return [number, adapter_identifier]
     else
-      raise NumberProvisioningError
+      raise NumberProvisioningError, response.inspect
     end
   end
 
