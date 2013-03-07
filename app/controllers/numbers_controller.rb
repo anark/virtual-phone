@@ -11,6 +11,7 @@ class NumbersController < ApplicationController
 
   def create
     if @number.save
+      flash[:notice] = "Number Successfully Created"
       redirect_to numbers_path
     else
       render :new
@@ -24,6 +25,7 @@ class NumbersController < ApplicationController
   def update
     @number = Number.find(params[:id])
     if @number.update_attributes(params[:number])
+      flash[:notice] = "Number Successfully Updated"
       redirect_to numbers_path
     else
       render :edit
@@ -33,7 +35,7 @@ class NumbersController < ApplicationController
   def destroy
     @number = Number.find(params[:id])
     if @number.destroy
-      flash[:notice] = "Number deleted successfully"
+      flash[:notice] = "Number Successfully Deleted"
       redirect_to numbers_path
     else
       raise "Number not destroyed #{@number.inspect}"
