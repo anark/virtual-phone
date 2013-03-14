@@ -84,7 +84,9 @@ describe TropoAdapter do
         let(:response_code) { 200 }
         let(:response_body) { {"href" => "http://trop.com/addresses/number/+16049999999"} }
         it "should return the number and adapter_identifier pair" do
-          adapter.provision_number("604").should == ["6049999999", "+16049999999"]
+          provisioning_response = adapter.provision_number("604")
+          provisioning_response.number.should == "6049999999"
+          provisioning_response.adapter_identifier.should == "+16049999999"
         end
       end
 

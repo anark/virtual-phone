@@ -11,9 +11,7 @@ class Adapter
 
   def process_provisioning_response(provisioning_response)
     if provisioning_response.success?
-      number = provisioning_response.number
-      adapter_identifier = provisioning_response.adapter_identifier
-      return [number, adapter_identifier]
+      provisioning_response
     elsif provisioning_response.number_not_available?
       raise NumberNotAvailableError, provisioning_response.response.inspect
     else

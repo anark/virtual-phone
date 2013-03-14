@@ -70,8 +70,7 @@ class TwilioAdapter < Adapter
   def provision_number(prefix)
     number_options = { "AreaCode" => prefix, "VoiceUrl" => "#{ENV['URL']}/phones/incoming_call", "SmsUrl" => "#{ENV['URL']}/phones/incoming_sms" }
     response = Http.post("/Accounts/#{ENV['TWILIO_ACCOUNT_SID']}/IncomingPhoneNumbers", :body => number_options)
-    provisioning_response = ProvisioningResponse.new(response)
-    process_provisioning_response(provisioning_response)
+    process_provisioning_response ProvisioningResponse.new(response)
   end
 
   def release_number(number)

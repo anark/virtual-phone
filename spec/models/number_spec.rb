@@ -79,10 +79,11 @@ describe Number do
 
   describe "provision_number" do
     let(:number) { FactoryGirl.build(:number, :number => nil, :prefix => '604') }
+    let(:provisioning_response) { stub(:number => "16048001234", :adapter_identifier => "1234") }
 
     before do
       adapter = Adapter.new
-      adapter.stub :provision_number => ["16048001234", "1234"]
+      adapter.stub :provision_number => provisioning_response
       number.should_receive(:adapter).any_number_of_times.and_return(adapter)
     end
 

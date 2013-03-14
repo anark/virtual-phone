@@ -87,7 +87,9 @@ describe TwilioAdapter do
       context "when provisioning is successful" do
         let(:response_code) { 201 }
         it "should return the number and sid pair" do
-          adapter.provision_number("604").should == ["6049999999", "1234"]
+          provisioning_response = adapter.provision_number("604")
+          provisioning_response.number.should == "6049999999"
+          provisioning_response.adapter_identifier.should == "1234"
         end
       end
 

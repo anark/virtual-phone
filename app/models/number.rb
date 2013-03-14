@@ -20,9 +20,9 @@ class Number < ActiveRecord::Base
 
   def provision_number
     return unless prefix
-    number, adapter_identifier = adapter.provision_number(prefix)
-    self.number = number
-    self.adapter_identifier = adapter_identifier
+    provisioning_response = adapter.provision_number(prefix)
+    self.number = provisioning_response.number
+    self.adapter_identifier = provisioning_response.adapter_identifier
   end
 
   def release_number

@@ -60,8 +60,7 @@ class TropoAdapter < Adapter
     prefix = "1#{prefix}"
     options = { :type => "number", :prefix => prefix }
     response = Http.post("/addresses", :body => options)
-    provisioning_response = ProvisioningResponse.new(response)
-    process_provisioning_response(provisioning_response)
+    process_provisioning_response ProvisioningResponse.new(response)
   end
 
   def release_number(number)
