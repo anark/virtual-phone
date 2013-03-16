@@ -12,6 +12,7 @@
     <%= yield(:head) %>
   </head>
   <body>
+    <%= render 'layouts/messages' %>
     <div class="container-fluid">
       <div class="navbar">
         <div class="navbar-inner">
@@ -20,7 +21,6 @@
           </div>
         </div>
       </div>
-      <%= render 'layouts/messages' %>
       <%= yield %>
       <footer>
       </footer>
