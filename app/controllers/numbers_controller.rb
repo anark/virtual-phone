@@ -8,11 +8,15 @@ class NumbersController < ApplicationController
   def new
     @number.phone = Phone.new
   end
+  
+  def show
+    @number = Number.find(params[:id])
+  end
 
   def create
     if @number.save
-      flash[:notice] = "Number Successfully Created"
-      redirect_to numbers_path
+      flash[:notice] = "Number Successfully Created, Please Allow up to 10 minutes for number to provision"
+      redirect_to number_path(@number)
     else
       render :new
     end

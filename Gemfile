@@ -11,6 +11,11 @@ gem 'phony_rails'
 gem 'phony'
 gem 'countries'
 gem "faker"
+gem "jquery-rails"
+gem "formtastic-bootstrap", :git => "git://github.com/mjbellantoni/formtastic-bootstrap.git" # Need a version with country select.  It is on github but hasn't been packaged/released
+
+gem 'sass-rails'
+gem 'bootstrap-sass'
 
 group :test do
   gem "rspec"

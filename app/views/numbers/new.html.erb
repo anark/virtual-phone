@@ -1,9 +1,12 @@
 <%= semantic_form_for @number, :url => numbers_path, :as => :number do |form| %>
-  <%= form.inputs "Desired Number" do %>
-    <%= form.input :prefix, :placeholder => '604', :label => "Area Code" %>
+  <%= form.inputs "Setup a Phone Number with" do %>
+    <%= form.input :prefix, :label => "Area Code", :input_html => { :class => "input-mini" } %>
   <%end%>
-  <%= render :partial => "phone_fields", :locals => {:form => form} %>
+  <%= form.inputs "That Forwards To" do%>
+    <%= render :partial => "phone_fields", :locals => {:form => form} %>
+  <%end%>
   <%= form.actions do %>
     <%= form.action :submit, :label => "Create Number" %>
+    <%= form.action :cancel, :label => "Cancel", :as => :link %>
   <%end%>
 <% end %>

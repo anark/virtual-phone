@@ -1,5 +1,10 @@
-<table>
-  <%= link_to "Add New Number", new_number_path %>
+<div class="action_items visible-desktop">
+  <%= link_to 'Add New Number', new_number_path, :class => "btn"%>
+</div>
+<div class="hidden-desktop">
+  <%= link_to 'Add New Number', new_number_path, :class => "btn btn-block"%>
+</div>
+<table class="table table-hover table-striped">
   <thead>
     <tr>
       <th>Number</th>
@@ -9,12 +14,11 @@
   </thead>
   <tbody>
     <% @numbers.each do |number| %>
-      <tr>
-        <td><%= number.number.phony_formatted %></td>
-        <td><%= number.phone.number.phony_formatted %></td>
-        <td><%= link_to 'edit', edit_number_path(number) %></td>
-        <td><%= link_to 'delete', number_path(number), :method => :delete %></td>
-      </tr>
+        <tr>
+          <td><%= number.number.phony_formatted %></td>
+          <td><%= number.phone.number.phony_formatted %></td>
+          <td><%= link_to 'view', number_path(number) %></td>
+        </tr>
     <% end %>
   </tbody>
 </table>

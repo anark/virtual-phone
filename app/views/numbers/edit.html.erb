@@ -1,6 +1,12 @@
 <%= semantic_form_for @number, :url => number_path, :as => :number do |form| %>
-  <%= render :partial => "phone_fields", :locals => {:form => form} %>
+  <div class="number_info">
+    <%= @number.number.phony_formatted %>
+  </div>
+  <%= form.inputs "Is Forwarded To" do%>
+    <%= render :partial => "phone_fields", :locals => {:form => form} %>
+  <%end%>
   <%= form.actions do %>
     <%= form.action :submit, :label => "Update Number" %>
+    <%= form.action :cancel, :label => "Cancel", :as => :link %>
   <%end%>
 <% end %>

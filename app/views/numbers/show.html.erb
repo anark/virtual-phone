@@ -1,0 +1,17 @@
+<div class="action_items visible-desktop">
+  <%= link_to 'Edit Number', edit_number_path(@number), :class => "btn" %>
+  <%= link_to 'Delete Number', number_path(@number), :confirm => "Are you sure you want to delete #{@number.number}", :method => :delete, :class => "btn btn-danger" %>
+</div>
+<div class="clearfix"></div>
+<div class="number_info">
+  <%= @number.number.phony_formatted %>
+</div>
+<div class="phone_info">
+  <legend>Is Forwarded To</legend>
+  <%= @number.phone.number.phony_formatted %>
+</div>
+<div class="hidden-desktop">
+  <%= link_to 'Edit Number', edit_number_path(@number), :class => "btn btn-block" %>
+  <%= link_to 'Delete Number', number_path(@number), :confirm => "Are you sure you want to delete #{@number.number}", :method => :delete, :class => "btn btn-danger btn-block" %>
+</div>
+

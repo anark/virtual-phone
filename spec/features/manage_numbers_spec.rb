@@ -11,7 +11,7 @@ end
 feature "Adding a number" do
   scenario "should add a number" do
     visit root_path
-    click_link "Add New Number"
+    first(:link, "Add New Number").click
     fill_in "Area Code", :with => "604"
     find(:select, 'number_phone_attributes_country_code').first(:option, 'Canada').select_option
     fill_in "Number", :with => "2222222222"
@@ -34,9 +34,9 @@ end
 feature "Delete a number" do
   scenario "Delete a forwarded to number" do
     number = FactoryGirl.create(:number, :number => "6041111111")
-    visit numbers_path
+    visit number_path number
     page.should have_content("604 111 1111")
-    click_link "delete"
+    first(:link, "Delete Number").click
     visit numbers_path
     page.should_not have_content("604 111 1111")
   end
